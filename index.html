@@ -19,6 +19,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
+            overflow-x: hidden;
         }
 
         .container {
@@ -33,10 +34,39 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .screen.active {
             display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         /* Login Screen */
@@ -45,6 +75,7 @@
             padding: 60px 40px;
             max-width: 500px;
             margin: 100px auto;
+            animation: slideIn 0.6s ease-out;
         }
 
         .login-screen h1 {
@@ -52,16 +83,19 @@
             font-size: 2.5rem;
             margin-bottom: 10px;
             font-weight: 700;
+            animation: bounce 1s ease-in-out;
         }
 
         .login-screen p {
             color: #666;
             margin-bottom: 40px;
             font-size: 1.1rem;
+            animation: fadeIn 1s ease-in-out 0.3s both;
         }
 
         .input-group {
             margin-bottom: 30px;
+            animation: fadeIn 1s ease-in-out 0.6s both;
         }
 
         .input-group label {
@@ -77,12 +111,14 @@
             border: 2px solid #e1e5e9;
             border-radius: 10px;
             font-size: 1.1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         .input-group input:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
         }
 
         .btn {
@@ -94,11 +130,33 @@
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
         }
 
         .btn-secondary {
@@ -107,12 +165,21 @@
             border: 2px solid #667eea;
         }
 
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
         .btn-danger {
-            background: #dc3545;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
         }
 
         .btn-success {
-            background: #28a745;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .btn-review {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
         }
 
         /* Exam Screen */
@@ -123,16 +190,18 @@
 
         .sidebar {
             width: 300px;
-            background: #f8f9fa;
+            background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
             border-right: 1px solid #e1e5e9;
             padding: 20px;
             overflow-y: auto;
+            animation: slideIn 0.5s ease-out;
         }
 
         .sidebar h3 {
             margin-bottom: 20px;
             color: #667eea;
             font-size: 1.2rem;
+            text-align: center;
         }
 
         .question-grid {
@@ -152,13 +221,36 @@
             justify-content: center;
             cursor: pointer;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .question-number::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            background: #667eea;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .question-number:hover::after {
+            width: 100%;
+            height: 100%;
+        }
+
+        .question-number:hover {
+            color: white;
+            transform: scale(1.1);
         }
 
         .question-number.current {
             background: #667eea;
             color: white;
             border-color: #667eea;
+            animation: pulse 2s infinite;
         }
 
         .question-number.answered {
@@ -167,39 +259,66 @@
             border-color: #28a745;
         }
 
-        .question-number:hover {
-            border-color: #667eea;
+        .question-number.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .question-number.wrong {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
         }
 
         .timer {
-            background: #fff3cd;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
             border: 1px solid #ffeaa7;
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 15px;
+            padding: 20px;
             text-align: center;
             margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(255, 234, 167, 0.3);
         }
 
         .timer h4 {
             color: #856404;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            font-size: 1rem;
         }
 
         .timer-display {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: #856404;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer.warning {
+            animation: pulse 1s infinite;
+        }
+
+        .timer.danger {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border-color: #f5c6cb;
+            animation: shake 0.5s infinite;
+        }
+
+        .timer.danger .timer-display,
+        .timer.danger h4 {
+            color: #721c24;
         }
 
         .main-content {
             flex: 1;
             padding: 30px;
             overflow-y: auto;
+            animation: fadeIn 0.5s ease-in-out 0.3s both;
         }
 
         .exam-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
@@ -212,40 +331,47 @@
         }
 
         .question-container {
-            background: #f8f9fa;
-            border-radius: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 20px;
             padding: 30px;
             margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .question-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .question-number-display {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
             font-weight: 600;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
         .category-tag {
-            background: #e9ecef;
+            background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
             color: #495057;
-            padding: 5px 12px;
-            border-radius: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
             font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #dee2e6;
         }
 
         .question-text {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
+            font-size: 1.3rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
             color: #333;
+            font-weight: 500;
         }
 
         .options {
@@ -256,32 +382,66 @@
         .option {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 18px;
             background: white;
             border: 2px solid #e1e5e9;
-            border-radius: 10px;
+            border-radius: 15px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .option:hover::before {
+            left: 100%;
         }
 
         .option:hover {
             border-color: #667eea;
             background: #f0f4ff;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
         }
 
         .option.selected {
             border-color: #667eea;
-            background: #f0f4ff;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8f2ff 100%);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        .option.wrong {
+            border-color: #dc3545;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            animation: shake 0.5s ease-in-out;
         }
 
         .option input[type="radio"] {
             margin-right: 15px;
-            transform: scale(1.2);
+            transform: scale(1.3);
+            accent-color: #667eea;
         }
 
         .option-text {
             font-size: 1.1rem;
-            line-height: 1.4;
+            line-height: 1.5;
+            font-weight: 500;
         }
 
         .navigation {
@@ -289,17 +449,25 @@
             justify-content: space-between;
             align-items: center;
             margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
         }
 
         .progress-info {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            font-weight: 500;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid #e9ecef;
         }
 
         /* Result Screen */
         .result-screen {
             padding: 40px;
             text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .result-header {
@@ -308,22 +476,38 @@
 
         .result-header h1 {
             color: #667eea;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            animation: bounce 1s ease-in-out;
+        }
+
+        .result-header p {
+            color: #666;
+            font-size: 1.2rem;
+            animation: fadeIn 1s ease-in-out 0.3s both;
         }
 
         .result-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
             margin-bottom: 40px;
         }
 
         .stat-card {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 15px;
-            border-left: 5px solid #667eea;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 30px;
+            border-radius: 20px;
+            border-left: 6px solid #667eea;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
         .stat-card.correct {
@@ -339,27 +523,156 @@
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card.correct .stat-number {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card.wrong .stat-number {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card.unanswered .stat-number {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .stat-label {
             color: #666;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
         .chart-container {
-            max-width: 400px;
-            margin: 0 auto 30px;
+            max-width: 450px;
+            margin: 0 auto 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        /* Review Screen */
+        .review-screen {
+            padding: 30px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .review-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e1e5e9;
+        }
+
+        .review-header h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .review-question {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 6px solid #667eea;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .review-question.correct {
+            border-left-color: #28a745;
+            background: linear-gradient(135deg, #f8fff9 0%, #ffffff 100%);
+        }
+
+        .review-question.wrong {
+            border-left-color: #dc3545;
+            background: linear-gradient(135deg, #fff8f8 0%, #ffffff 100%);
+        }
+
+        .review-question.unanswered {
+            border-left-color: #ffc107;
+            background: linear-gradient(135deg, #fffdf8 0%, #ffffff 100%);
+        }
+
+        .review-question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .review-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .review-status.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .review-status.wrong {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .review-status.unanswered {
+            background: #fff3cd;
+            color: #856404;
         }
 
         .error-message {
-            background: #f8d7da;
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
             color: #721c24;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 15px 20px;
+            border-radius: 15px;
             margin-top: 20px;
+            border: 1px solid #f5c6cb;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
@@ -370,7 +683,13 @@
             .sidebar {
                 width: 100%;
                 height: auto;
-                max-height: 200px;
+                max-height: 250px;
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+                padding: 20px;
             }
             
             .question-grid {
@@ -378,9 +697,38 @@
             }
             
             .question-number {
-                width: 30px;
-                height: 30px;
-                font-size: 0.8rem;
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .result-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-screen {
+                padding: 40px 20px;
+                margin: 50px auto;
+            }
+
+            .login-screen h1 {
+                font-size: 2rem;
+            }
+
+            .result-stats {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -407,7 +755,7 @@
         <div id="examScreen" class="screen">
             <div class="exam-screen">
                 <div class="sidebar">
-                    <div class="timer">
+                    <div id="timerContainer" class="timer">
                         <h4>ബാക്കി സമയം</h4>
                         <div id="timerDisplay" class="timer-display">01:30:00</div>
                     </div>
@@ -478,16 +826,34 @@
                     <canvas id="resultChart"></canvas>
                 </div>
                 
-                <div style="margin-top: 30px;">
+                <div class="result-actions">
                     <button class="btn btn-success" onclick="downloadChart()">ചാർട്ട് ഡൗൺലോഡ് ചെയ്യുക</button>
-                    <button class="btn btn-secondary" onclick="restartExam()" style="margin-left: 15px;">വീണ്ടും പരീക്ഷ എഴുതുക</button>
+                    <button class="btn btn-review" onclick="showReview()">ഉത്തരങ്ങൾ അവലോകനം ചെയ്യുക</button>
+                    <button class="btn btn-secondary" onclick="restartExam()">വീണ്ടും പരീക്ഷ എഴുതുക</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Screen -->
+        <div id="reviewScreen" class="screen">
+            <div class="review-screen">
+                <div class="review-header">
+                    <h1>ഉത്തര അവലോകനം</h1>
+                    <p>എല്ലാ ചോദ്യങ്ങളും ശരിയായ ഉത്തരങ്ങളും</p>
+                </div>
+                
+                <div id="reviewContainer"></div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <button class="btn btn-secondary" onclick="backToResults()">ഫലത്തിലേക്ക് മടങ്ങുക</button>
+                    <button class="btn" onclick="restartExam()" style="margin-left: 15px;">വീണ്ടും പരീക്ഷ എഴുതുക</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Questions data
+        // Questions data with more comprehensive Malayalam questions
        const questions = [
     {id:1,question:"തിരുവിതാംകൂർ ദേവസ്വം ബോർഡ് ഏത് വർഷം രൂപീകരിച്ചു?",options:["1932","1949","1950","1947"],correct:1,category:"ദേവസ്വം ബോർഡ്"},
     {id:2,question:"കേരളത്തിലെ ഏറ്റവും പഴയ ദേവസ്വം ബോർഡ് ഏത്?",options:["തിരുവിതാംകൂർ","കൊച്ചി","മലബാർ","ഗുരുവായൂർ"],correct:0,category:"ദേവസ്വം ബോർഡ്"},
@@ -539,17 +905,67 @@
     {id:48,question:"ക്ഷേത്രത്തിലെ 'ആറാട്ട്' എന്നാൽ എന്ത്?",options:["ഒരു തരം പൂജ","ദേവതയുടെ സ്നാനം","ക്ഷേത്രത്തിന്റെ ശുചിത്വം","ഉത്സവത്തിന്റെ ആരംഭം"],correct:1,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
     {id:49,question:"വാമന പുരാണം പ്രകാരം ബലിയുടെ യജ്ഞം നടന്ന സ്ഥലം?",options:["കാശി","പ്രയാഗ","നൈമിശാരണ്യം","കുരുക്ഷേത്രം"],correct:1,category:"പുരാണങ്ങൾ"},
     {id:50,question:"കേരളത്തിലെ ഏറ്റവും വലിയ ക്ഷേത്ര ഗോപുരത്തിന്റെ നിർമ്മാണ സമയം?",options:["5 വർഷം","10 വർഷം","15 വർഷം","20 വർഷം"],correct:1,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
-    // Continuing up to 100...
-    {id:100,question:"കേരള ക്ഷേത്രങ്ങളിലെ പ്രധാന പ്രതിഷ്ഠാരീതി?",options:["ശിലാ","ദാരു","ലോഹ","സ്ഫടിക"],correct:1,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"}
+       {id:51,question:"കൊച്ചി ദേവസ്വം ബോർഡ് ഭരണത്തിലുള്ള ഏറ്റവും പഴയ ക്ഷേത്രം?",options:["ഏറണാകുളം ശിവക്ഷേത്രം","തൃപ്പൂണിത്തുറ ക്ഷേത്രം","വൈക്കം മഹാദേവക്ഷേത്രം","ചോട്ടാനിക്കര ഭഗവതി ക്ഷേത്രം"],correct:2,category:"ദേവസ്വം ബോർഡ്"},
+    {id:52,question:"അഥർവവേദത്തിലെ 'ശാന്തി കൽപം' എത്ര സൂക്തങ്ങൾ ഉൾക്കൊള്ളുന്നു?",options:["6","12","24","36"],correct:0,category:"വേദങ്ങൾ"},
+    {id:53,question:"ക്ഷേത്രത്തിലെ 'മലർ' എന്നാൽ എന്ത്?",options:["പൂവിന്റെ അർച്ചന","ഒരു തരം ഭക്ഷണം","ദേവിയുടെ വസ്ത്രം","ക്ഷേത്രത്തിന്റെ ശുചിത്വം"],correct:0,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
+    {id:54,question:"നാരദീയ പുരാണം പ്രകാരം സംഗീതത്തിന്റെ മൂലങ്ങൾ?",options:["3","5","7","9"],correct:2,category:"പുരാണങ്ങൾ"},
+    {id:55,question:"കേരളത്തിലെ ഏറ്റവും ഉയരമുള്ള ക്ഷേത്ര ധ്വജസ്തംഭത്തിന്റെ ഉയരം?",options:["25 മീറ്റർ","35 മീറ്റർ","45 മീറ്റർ","55 മീറ്റർ"],correct:1,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
+    {id:56,question:"ഗരുഡ പുരാണം പ്രകാരം പിതൃക്കളുടെ ലോകം?",options:["ഭൂർലോകം","ഭുവർലോകം","പിതൃലോകം","സ്വർലോകം"],correct:2,category:"പുരാണങ്ങൾ"},
+    {id:57,question:"തിരുവിതാംകൂർ ദേവസ്വം ബോർഡിന്റെ ഭരണത്തിലുള്ള ക്ഷേത്രങ്ങളുടെ എണ്ണം?",options:["1248","1024","968","852"],correct:0,category:"ദേവസ്വം ബോർഡ്"},
+    {id:58,question:"സാമവേദത്തിന്റെ ഏറ്റവും പ്രധാനപ്പെട്ട ഋഷി?",options:["വസിഷ്ഠൻ","വിശ്വാമിത്രൻ","ജൈമിനി","ഉദ്ദാലകൻ"],correct:2,category:"വേദങ്ങൾ"},
+    {id:59,question:"ക്ഷേത്രത്തിലെ 'നെയ്യഭിഷേകം' സാധാരണ എത്ര മണിക്ക് നടത്തുന്നു?",options:["4:00 AM","6:00 AM","8:00 AM","10:00 AM"],correct:1,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
+    {id:60,question:"ബ്രഹ്മാണ്ഡ പുരാണം പ്രകാരം ബ്രഹ്മാവിന്റെ ഒരു ദിവസം?",options:["1000 ചതുര്യുഗം","100 ചതുര്യുഗം","10 ചതുര്യുഗം","1 ചതുര്യുഗം"],correct:0,category:"പുരാണങ്ങൾ"},
+    {id:61,question:"കേരളത്തിലെ ഏറ്റവും വലിയ ക്ഷേത്ര നടയുടെ വിസ്തീർണ്ണം?",options:["5000 ചതുരശ്ര അടി","7500 ചതുരശ്ര അടി","10000 ചതുരശ്ര അടി","12500 ചതുരശ്ര അടി"],correct:2,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
+    {id:62,question:"വായു പുരാണം പ്രകാരം പഞ്ചഭൂതങ്ങൾ?",options:["പൃഥ്വി,ജലം,അഗ്നി,വായു,ആകാശം","അന്നം,അംഗം,മനസ്,വാക്ക്,കർമ്മം","ഇന്ദ്രിയങ്ങൾ","ദേവന്മാർ"],correct:0,category:"പുരാണങ്ങൾ"},
+    {id:63,question:"കൊച്ചി ദേവസ്വം ബോർഡിന്റെ ആദ്യ അധ്യക്ഷൻ?",options:["ടി.കെ.നാരായണൻ","കെ.എസ്.മേനോൻ","വി.പി.മാധവൻ","പി.കെ.വാസുദേവൻ"],correct:1,category:"ദേവസ്വം ബോർഡ്"},
+    {id:64,question:"യജുര്വേദത്തിന്റെ ക്രിയാത്മക ഭാഗം?",options:["ബ്രാഹ്മണം","ആരണ്യകം","സംഹിത","ഉപനിഷത്ത്"],correct:0,category:"വേദങ്ങൾ"},
+    {id:65,question:"ക്ഷേത്രത്തിലെ 'ഉച്ചപ്പൂജ'യുടെ പ്രധാന ആചാരം?",options:["അഭിഷേകം","ആലാത്തം","നിവേദ്യം","ദീപാരാധന"],correct:1,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
+    {id:66,question:"മാർക്കണ്ഡേയ പുരാണം പ്രകാരം ദുർഗാസപ്തശതിയിലെ അദ്ധ്യായങ്ങൾ?",options:["13","17","21","25"],correct:0,category:"പുരാണങ്ങൾ"},
+    {id:67,question:"കേരളത്തിലെ ഏറ്റവും വലിയ ക്ഷേത്ര ഗോപുരത്തിന്റെ നിർമ്മാണ സമയം?",options:["5 വർഷം","10 വർഷം","15 വർഷം","20 വർഷം"],correct:1,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
+    {id:68,question:"ഭവിഷ്യ പുരാണം പ്രകാരം കലിയുഗത്തിന്റെ ദൈർഘ്യം?",options:["1000 വർഷം","2000 വർഷം","3000 വർഷം","432000 വർഷം"],correct:3,category:"പുരാണങ്ങൾ"},
+    {id:69,question:"തിരുവിതാംകൂർ ദേവസ്വം ബോർഡിന്റെ വാർഷിക ബജറ്റ് എത്ര കോടി?",options:["100-150","150-200","200-250","250-300"],correct:1,category:"ദേവസ്വം ബോർഡ്"},
+    {id:70,question:"ഋഗ്വേദത്തിലെ 'പുരുഷസൂക്തം' ഏത് മണ്ഡലത്തിലാണ്?",options:["ഒന്നാം","ഏഴാം","പത്താം","പന്ത്രണ്ടാം"],correct:2,category:"വേദങ്ങൾ"},
+    {id:71,question:"ക്ഷേത്രത്തിലെ 'ശീവേലി' സമയം സാധാരണ എത്ര മണിക്ക്?",options:["8:00 AM","10:00 AM","12:00 PM","2:00 PM"],correct:1,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
+    {id:72,question:"വിഷ്ണു പുരാണം പ്രകാരം വിഷ്ണുവിന്റെ ശയന സമയം?",options:["1 മാസം","2 മാസം","3 മാസം","4 മാസം"],correct:3,category:"പുരാണങ്ങൾ"},
+    {id:73,question:"കേരളത്തിലെ ഏറ്റവും വലിയ ക്ഷേത്ര ധ്വജസ്തംഭത്തിന്റെ വിസ്തീർണ്ണം?",options:["100 ചതുരശ്ര അടി","150 ചതുരശ്ര അടി","200 ചതുരശ്ര അടി","250 ചതുരശ്ര അടി"],correct:2,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
+    {id:74,question:"ബ്രഹ്മ പുരാണം പ്രകാരം സൃഷ്ടിയുടെ ഘട്ടങ്ങൾ?",options:["5","7","9","11"],correct:1,category:"പുരാണങ്ങൾ"},
+    {id:75,question:"കൊച്ചി ദേവസ്വം ബോർഡിന്റെ ഭരണഘടനാ വിഭാഗങ്ങൾ?",options:["3","4","5","6"],correct:2,category:"ദേവസ്വം ബോർഡ്"},
+    {id:76,question:"അഥർവവേദത്തിലെ 'ഭൈഷജ്യ കൽപം' എത്ര സൂക്തങ്ങൾ ഉൾക്കൊള്ളുന്നു?",options:["6","12","18","24"],correct:0,category:"വേദങ്ങൾ"},
+    {id:77,question:"ക്ഷേത്രത്തിലെ 'പന്തൽ പൂജ' എന്നാൽ എന്ത്?",options:["ഒരു തരം പൂജ","ക്ഷേത്രത്തിന്റെ ശുചിത്വം","ദേവിയുടെ വിവാഹം","ഉത്സവത്തിന്റെ ആരംഭം"],correct:0,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
+    {id:78,question:"പദ്മ പുരാണം പ്രകാരം പുണ്യനദികൾ?",options:["5","7","9","11"],correct:1,category:"പുരാണങ്ങൾ"},
+    {id:79,question:"കേരളത്തിലെ ഏറ്റവും വലിയ ക്ഷേത്ര നടയുടെ നിർമ്മാണ സമയം?",options:["5 വർഷം","10 വർഷം","15 വർഷം","20 വർഷം"],correct:1,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
+    {id:80,question:"കൂർമ്മ പുരാണം പ്രകാരം വിഷ്ണുവിന്റെ ആയുധങ്ങൾ?",options:["5","7","9","11"],correct:2,category:"പുരാണങ്ങൾ"},
+    {id:81,question:"തിരുവിതാംകൂർ ദേവസ്വം ബോർഡിന്റെ ചെയർമാൻ നിയമിക്കുന്നത്?",options:["കേരള ഗവർണർ","കേരള മുഖ്യമന്ത്രി","ദേവസ്വം ബോർഡ്","ഹൈക്കോടതി"],correct:2,category:"ദേവസ്വം ബോർഡ്"},
+    {id:82,question:"സാമവേദത്തിന്റെ ഏറ്റവും പ്രധാനപ്പെട്ട ഛന്ദസ്സ്?",options:["ഗായത്രി","ജഗതി","ത്രിഷ്ടുപ്","അനുഷ്ടുപ്"],correct:0,category:"വേദങ്ങൾ"},
+    {id:83,question:"ക്ഷേത്രത്തിലെ 'ഉച്ചപ്പൂജ' സമയം സാധാരണ എത്ര മണിക്ക്?",options:["10:30 AM","11:30 AM","12:00 PM","1:00 PM"],correct:1,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
+    {id:84,question:"വരാഹ പുരാണം പ്രകാരം ഭൂമിയുടെ ആഴം?",options:["1000 യോജന","2000 യോജന","3000 യോജന","4000 യോജന"],correct:3,category:"പുരാണങ്ങൾ"},
+    {id:85,question:"കേരളത്തിലെ ഏറ്റവും വലിയ ക്ഷേത്ര ധ്വജസ്തംഭത്തിന്റെ നിർമ്മാണ സമയം?",options:["5 വർഷം","10 വർഷം","15 വർഷം","20 വർഷം"],correct:1,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
+    {id:86,question:"അഗ്നി പുരാണം പ്രകാരം അഗ്നിയുടെ രൂപങ്ങൾ?",options:["3","5","7","9"],correct:2,category:"പുരാണങ്ങൾ"},
+    {id:87,question:"കൊച്ചി ദേവസ്വം ബോർഡിന്റെ ഭരണത്തിലുള്ള ഏറ്റവും വലിയ ക്ഷേത്രം?",options:["ഏറണാകുളം ശിവക്ഷേത്രം","തൃപ്പൂണിത്തുറ ക്ഷേത്രം","വൈക്കം മഹാദേവക്ഷേത്രം","ചോട്ടാനിക്കര ഭഗവതി ക്ഷേത്രം"],correct:1,category:"ദേവസ്വം ബോർഡ്"},
+    {id:88,question:"യജുര്വേദത്തിന്റെ ശുക്ല യജുസ്സ് ശാഖയുടെ പ്രധാന ബ്രാഹ്മണം?",options:["ഐതരേയം","ശതപത","ഗോപഥ","മൈത്രായണി"],correct:1,category:"വേദങ്ങൾ"},
+    {id:89,question:"ക്ഷേത്രത്തിലെ 'നിറാഭിഷേകം' സമയം സാധാരണ എത്ര മണിക്ക്?",options:["4:00 AM","6:00 AM","8:00 AM","10:00 AM"],correct:1,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
+    {id:90,question:"മത്സ്യ പുരാണം പ്രകാരം മനുവിന്റെ തരങ്ങൾ?",options:["7","14","21","28"],correct:1,category:"പുരാണങ്ങൾ"},
+    {id:91,question:"കേരളത്തിലെ ഏറ്റവും വലിയ ക്ഷേത്ര ഗോപുരത്തിന്റെ വിസ്തീർണ്ണം?",options:["1000 ചതുരശ്ര അടി","1500 ചതുരശ്ര അടി","2000 ചതുരശ്ര അടി","2500 ചതുരശ്ര അടി"],correct:2,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
+    {id:92,question:"വായു പുരാണം പ്രകാരം പ്രാണന്റെ തരങ്ങൾ?",options:["5","7","9","11"],correct:0,category:"പുരാണങ്ങൾ"},
+    {id:93,question:"തിരുവിതാംകൂർ ദേവസ്വം ബോർഡിന്റെ ഭരണത്തിലുള്ള ഏറ്റവും വലിയ ക്ഷേത്രം?",options:["പദ്മനാഭസ്വാമി ക്ഷേത്രം","അടികാല ശിവക്ഷേത്രം","ആറന്മുള ക്ഷേത്രം","അമ്പലപ്പുഴ ക്ഷേത്രം"],correct:0,category:"ദേവസ്വം ബോർഡ്"},
+    {id:94,question:"അഥർവവേദത്തിലെ 'രാജകൃത്യ കൽപം' എത്ര സൂക്തങ്ങൾ ഉൾക്കൊള്ളുന്നു?",options:["6","12","18","24"],correct:0,category:"വേദങ്ങൾ"},
+    {id:95,question:"ക്ഷേത്രത്തിലെ 'ആറാട്ട്' സമയം സാധാരണ എത്ര മണിക്ക്?",options:["4:00 AM","6:00 AM","8:00 AM","10:00 AM"],correct:1,category:"ക്ഷേത്ര ആചാരങ്ങൾ"},
+    {id:96,question:"നാരദീയ പുരാണം പ്രകാരം സംഗീതത്തിന്റെ സ്വരങ്ങൾ?",options:["7","12","16","22"],correct:0,category:"പുരാണങ്ങൾ"},
+    {id:97,question:"കേരളത്തിലെ ഏറ്റവും വലിയ ക്ഷേത്ര നടയുടെ നിർമ്മാണ സമയം?",options:["5 വർഷം","10 വർഷം","15 വർഷം","20 വർഷം"],correct:1,category:"ക്ഷേത്ര വാസ്തുവിദ്യ"},
+    {id:98,question:"ഗരുഡ പുരാണം പ്രകാരം നാഗലോകത്തിന്റെ തലങ്ങൾ?",options:["5","7","9","11"],correct:1,category:"പുരാണങ്ങൾ"},
+    {id:99,question:"കൊച്ചി ദേവസ്വം ബോർഡിന്റെ ഭരണത്തിലുള്ള ഏറ്റവും പഴയ ക്ഷേത്രം?",options:["ഏറണാകുളം ശിവക്ഷേത്രം","തൃപ്പൂണിത്തുറ ക്ഷേത്രം","വൈക്കം മഹാദേവക്ഷേത്രം","ചോട്ടാനിക്കര ഭഗവതി ക്ഷേത്രം"],correct:2,category:"ദേവസ്വം ബോർഡ്"},
+    {id:100,question:"ഋഗ്വേദത്തിലെ 'രുദ്ര' സൂക്തം ഏത് മണ്ഡലത്തിലാണ്?",options:["ഒന്നാം","ഏഴാം","പത്താം","പന്ത്രണ്ടാം"],correct:1,category:"വേദങ്ങൾ"}
 ];
 
+
         // Add more sample questions to reach 100
-        for (let i = 11; i <= 100; i++) {
-            const categories = ["പൊതുവിജ്ഞാനം", "ശാസ്ത്രം", "ഗണിതം", "ഇംഗ്ലീഷ്", "നിലവിലെ കാര്യങ്ങൾ"];
+        const categories = ["പൊതുവിജ്ഞാനം", "ശാസ്ത്രം", "ഗണിതം", "ഇംഗ്ലീഷ്", "നിലവിലെ കാര്യങ്ങൾ", "കേരള ചരിത്രം", "ഭരണഘടന", "ഭൂമിശാസ്ത്രം"];
+        
+        for (let i = 16; i <= 100; i++) {
             questions.push({
                 id: i,
-                question: `സാമ്പിൾ ചോദ്യം ${i}: ഇത് ഒരു പരീക്ഷാ ചോദ്യമാണ്?`,
-                options: ["ഓപ്ഷൻ A", "ഓപ്ഷൻ B", "ഓപ്ഷൻ C", "ഓപ്ഷൻ D"],
+                question: `സാമ്പിൾ ചോദ്യം ${i}: ഇത് ഒരു പരീക്ഷാ ചോദ്യമാണ്. ശരിയായ ഉത്തരം തിരഞ്ഞെടുക്കുക?`,
+                options: [`ഓപ്ഷൻ A - ${i}`, `ഓപ്ഷൻ B - ${i}`, `ഓപ്ഷൻ C - ${i}`, `ഓപ്ഷൻ D - ${i}`],
                 correct: Math.floor(Math.random() * 4),
                 category: categories[Math.floor(Math.random() * categories.length)]
             });
@@ -561,6 +977,7 @@
         let timeLeft = 90 * 60; // 90 minutes in seconds
         let timerInterval;
         let examStarted = false;
+        let examResults = null;
 
         // Initialize question grid
         function initializeQuestionGrid() {
@@ -581,7 +998,7 @@
         function updateQuestionGrid() {
             const questionNumbers = document.querySelectorAll('.question-number');
             questionNumbers.forEach((element, index) => {
-                element.classList.remove('current', 'answered');
+                element.classList.remove('current', 'answered', 'correct', 'wrong');
                 
                 if (index === currentQuestion) {
                     element.classList.add('current');
@@ -628,7 +1045,7 @@
             updateQuestionGrid();
         }
 
-        // Select answer
+        // Select answer with animation
         function selectAnswer(questionId, optionIndex) {
             userAnswers[questionId] = optionIndex;
             
@@ -638,10 +1055,18 @@
                 radio.checked = index === optionIndex;
             });
             
-            // Update option styling
+            // Update option styling with animation
             const options = document.querySelectorAll('.option');
             options.forEach((option, index) => {
-                option.classList.toggle('selected', index === optionIndex);
+                option.classList.remove('selected');
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                    // Add a subtle animation
+                    option.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        option.style.transform = 'scale(1)';
+                    }, 200);
+                }
             });
             
             updateQuestionGrid();
@@ -669,7 +1094,7 @@
             displayQuestion();
         }
 
-        // Timer functions
+        // Timer functions with enhanced visual feedback
         function startTimer() {
             timerInterval = setInterval(() => {
                 timeLeft--;
@@ -689,132 +1114,295 @@
             const display = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             document.getElementById('timerDisplay').textContent = display;
             
-            // Change color when time is running out
+            const timerContainer = document.getElementById('timerContainer');
             const timerDisplay = document.getElementById('timerDisplay');
+            
+            // Enhanced timer visual feedback
             if (timeLeft < 300) { // Less than 5 minutes
-                timerDisplay.style.color = '#dc3545';
+                timerContainer.classList.add('danger');
+                timerContainer.classList.remove('warning');
             } else if (timeLeft < 900) { // Less than 15 minutes
-                timerDisplay.style.color = '#fd7e14';
+                timerContainer.classList.add('warning');
+                timerContainer.classList.remove('danger');
+            } else {
+                timerContainer.classList.remove('warning', 'danger');
             }
         }
 
-        // Login function
+        // Login function with animation
         function handleLogin() {
             const accessCode = document.getElementById('accessCode').value;
             const errorDiv = document.getElementById('loginError');
+            const loginBtn = document.querySelector('.login-screen .btn');
             
-            if (accessCode === 'psc100') {
-                document.getElementById('loginScreen').classList.remove('active');
-                document.getElementById('examScreen').classList.add('active');
-                
-                initializeQuestionGrid();
-                displayQuestion();
-                startTimer();
-                examStarted = true;
-            } else {
-                errorDiv.style.display = 'block';
-                setTimeout(() => {
-                    errorDiv.style.display = 'none';
-                }, 3000);
-            }
+            // Add loading animation
+            loginBtn.innerHTML = '<span class="loading"></span> പരിശോധിക്കുന്നു...';
+            loginBtn.disabled = true;
+            
+            setTimeout(() => {
+                if (accessCode === 'psc100') {
+                    document.getElementById('loginScreen').classList.remove('active');
+                    document.getElementById('examScreen').classList.add('active');
+                    
+                    initializeQuestionGrid();
+                    displayQuestion();
+                    startTimer();
+                    examStarted = true;
+                } else {
+                    errorDiv.style.display = 'block';
+                    loginBtn.innerHTML = 'പരീക്ഷ ആരംഭിക്കുക';
+                    loginBtn.disabled = false;
+                    
+                    setTimeout(() => {
+                        errorDiv.style.display = 'none';
+                    }, 3000);
+                }
+            }, 1000);
         }
 
-        // Finish exam
+        // Finish exam with confirmation
         function finishExam() {
             if (examStarted) {
-                clearInterval(timerInterval);
-                examStarted = false;
+                const unansweredCount = 100 - Object.keys(userAnswers).length;
+                let confirmMessage = 'പരീക്ഷ പൂർത്തിയാക്കാൻ ആഗ്രഹിക്കുന്നുണ്ടോ?';
                 
-                document.getElementById('examScreen').classList.remove('active');
-                document.getElementById('resultScreen').classList.add('active');
+                if (unansweredCount > 0) {
+                    confirmMessage += `\n\n${unansweredCount} ചോദ്യങ്ങൾക്ക് ഉത്തരം നൽകിയിട്ടില്ല.`;
+                }
                 
-                calculateAndDisplayResults();
+                if (confirm(confirmMessage)) {
+                    clearInterval(timerInterval);
+                    examStarted = false;
+                    
+                    document.getElementById('examScreen').classList.remove('active');
+                    document.getElementById('resultScreen').classList.add('active');
+                    
+                    calculateAndDisplayResults();
+                }
             }
         }
 
-        // Calculate results
+        // Calculate results with detailed analysis
         function calculateAndDisplayResults() {
             let correct = 0;
             let wrong = 0;
             let unanswered = 0;
+            const detailedResults = [];
             
             questions.forEach(question => {
                 const userAnswer = userAnswers[question.id];
+                let status = 'unanswered';
+                
                 if (userAnswer === undefined) {
                     unanswered++;
+                    status = 'unanswered';
                 } else if (userAnswer === question.correct) {
                     correct++;
+                    status = 'correct';
                 } else {
                     wrong++;
+                    status = 'wrong';
                 }
+                
+                detailedResults.push({
+                    question: question,
+                    userAnswer: userAnswer,
+                    status: status
+                });
             });
             
             const finalScore = correct - (wrong * 1/3);
             
-            // Update display
-            document.getElementById('correctCount').textContent = correct;
-            document.getElementById('wrongCount').textContent = wrong;
-            document.getElementById('unansweredCount').textContent = unanswered;
-            document.getElementById('finalScore').textContent = finalScore.toFixed(2);
+            // Store results for review
+            examResults = {
+                correct,
+                wrong,
+                unanswered,
+                finalScore: finalScore.toFixed(2),
+                detailedResults
+            };
+            
+            // Update display with animations
+            setTimeout(() => document.getElementById('correctCount').textContent = correct, 200);
+            setTimeout(() => document.getElementById('wrongCount').textContent = wrong, 400);
+            setTimeout(() => document.getElementById('unansweredCount').textContent = unanswered, 600);
+            setTimeout(() => document.getElementById('finalScore').textContent = finalScore.toFixed(2), 800);
             
             // Create chart
-            createResultChart(correct, wrong, unanswered);
+            setTimeout(() => createResultChart(correct, wrong, unanswered), 1000);
         }
 
-        // Create result chart
+        // Create enhanced result chart
         function createResultChart(correct, wrong, unanswered) {
             const ctx = document.getElementById('resultChart').getContext('2d');
             
             new Chart(ctx, {
-                type: 'pie',
+                type: 'doughnut',
                 data: {
                     labels: ['ശരിയായ ഉത്തരങ്ങൾ', 'തെറ്റായ ഉത്തരങ്ങൾ', 'ഉത്തരം നൽകാത്തവ'],
                     datasets: [{
                         data: [correct, wrong, unanswered],
-                        backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
-                        borderWidth: 2,
-                        borderColor: '#fff'
+                        backgroundColor: [
+                            'linear-gradient(135deg, #28a745 0%, #20c997 100%)',
+                            'linear-gradient(135deg, #dc3545 0%, #c82333 100%)',
+                            'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)'
+                        ],
+                        borderWidth: 3,
+                        borderColor: '#fff',
+                        hoverBorderWidth: 5,
+                        hoverOffset: 10
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: true,
                     plugins: {
                         legend: {
                             position: 'bottom',
                             labels: {
-                                padding: 20,
+                                padding: 25,
                                 font: {
-                                    size: 14
-                                }
+                                    size: 14,
+                                    weight: '500'
+                                },
+                                usePointStyle: true,
+                                pointStyle: 'circle'
                             }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: '#667eea',
+                            borderWidth: 1,
+                            cornerRadius: 10,
+                            displayColors: true
                         }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 2000,
+                        easing: 'easeOutBounce'
                     }
                 }
             });
         }
 
-        // Download chart
+        // Show review screen
+        function showReview() {
+            if (!examResults) return;
+            
+            document.getElementById('resultScreen').classList.remove('active');
+            document.getElementById('reviewScreen').classList.add('active');
+            
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '';
+            
+            examResults.detailedResults.forEach((result, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = `review-question ${result.status}`;
+                
+                const statusText = {
+                    'correct': 'ശരി',
+                    'wrong': 'തെറ്റ്',
+                    'unanswered': 'ഉത്തരം നൽകിയില്ല'
+                };
+                
+                const userAnswerText = result.userAnswer !== undefined 
+                    ? result.question.options[result.userAnswer] 
+                    : 'ഉത്തരം നൽകിയില്ല';
+                
+                questionDiv.innerHTML = `
+                    <div class="review-question-header">
+                        <span class="question-number-display">ചോദ്യം ${index + 1}</span>
+                        <span class="review-status ${result.status}">${statusText[result.status]}</span>
+                    </div>
+                    <div class="category-tag" style="margin-bottom: 15px;">${result.question.category}</div>
+                    <div class="question-text">${result.question.question}</div>
+                    <div class="options">
+                        ${result.question.options.map((option, optIndex) => {
+                            let optionClass = 'option';
+                            if (optIndex === result.question.correct) {
+                                optionClass += ' correct';
+                            } else if (optIndex === result.userAnswer && result.status === 'wrong') {
+                                optionClass += ' wrong';
+                            }
+                            
+                            return `
+                                <div class="${optionClass}">
+                                    <span class="option-text">
+                                        ${optIndex === result.question.correct ? '✓ ' : ''}
+                                        ${option}
+                                        ${optIndex === result.question.correct ? ' (ശരിയായ ഉത്തരം)' : ''}
+                                        ${optIndex === result.userAnswer && result.userAnswer !== result.question.correct ? ' (നിങ്ങളുടെ ഉത്തരം)' : ''}
+                                    </span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                
+                reviewContainer.appendChild(questionDiv);
+            });
+        }
+
+        // Back to results
+        function backToResults() {
+            document.getElementById('reviewScreen').classList.remove('active');
+            document.getElementById('resultScreen').classList.add('active');
+        }
+
+        // Download chart with enhanced functionality
         function downloadChart() {
             const chartContainer = document.querySelector('.chart-container');
-            html2canvas(chartContainer).then(canvas => {
+            const downloadBtn = document.querySelector('.btn-success');
+            
+            downloadBtn.innerHTML = '<span class="loading"></span> ഡൗൺലോഡ് ചെയ്യുന്നു...';
+            downloadBtn.disabled = true;
+            
+            html2canvas(chartContainer, {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                logging: false
+            }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'psc-exam-result.png';
-                link.href = canvas.toDataURL();
+                link.download = `psc-exam-result-${new Date().toISOString().split('T')[0]}.png`;
+                link.href = canvas.toDataURL('image/png');
                 link.click();
+                
+                downloadBtn.innerHTML = 'ചാർട്ട് ഡൗൺലോഡ് ചെയ്യുക';
+                downloadBtn.disabled = false;
+            }).catch(error => {
+                console.error('Download failed:', error);
+                downloadBtn.innerHTML = 'ചാർട്ട് ഡൗൺലോഡ് ചെയ്യുക';
+                downloadBtn.disabled = false;
+                alert('ഡൗൺലോഡ് പരാജയപ്പെട്ടു. ദയവായി വീണ്ടും ശ്രമിക്കുക.');
             });
         }
 
         // Restart exam
         function restartExam() {
-            currentQuestion = 0;
-            userAnswers = {};
-            timeLeft = 90 * 60;
-            examStarted = false;
-            
-            document.getElementById('resultScreen').classList.remove('active');
-            document.getElementById('loginScreen').classList.add('active');
-            
-            document.getElementById('accessCode').value = '';
+            if (confirm('പരീക്ഷ വീണ്ടും ആരംഭിക്കാൻ ആഗ്രഹിക്കുന്നുണ്ടോ? നിലവിലെ പുരോഗതി നഷ്ടപ്പെടും.')) {
+                currentQuestion = 0;
+                userAnswers = {};
+                timeLeft = 90 * 60;
+                examStarted = false;
+                examResults = null;
+                
+                // Hide all screens
+                document.querySelectorAll('.screen').forEach(screen => {
+                    screen.classList.remove('active');
+                });
+                
+                // Show login screen
+                document.getElementById('loginScreen').classList.add('active');
+                document.getElementById('accessCode').value = '';
+                
+                // Reset timer display
+                document.getElementById('timerDisplay').textContent = '01:30:00';
+                document.getElementById('timerContainer').classList.remove('warning', 'danger');
+            }
         }
 
         // Handle Enter key on login
@@ -824,12 +1412,85 @@
             }
         });
 
-        // Prevent page refresh
+        // Prevent page refresh during exam
         window.addEventListener('beforeunload', function(e) {
             if (examStarted) {
                 e.preventDefault();
-                e.returnValue = '';
+                e.returnValue = 'പരീക്ഷ പുരോഗമിക്കുന്നു. പേജ് വിടാൻ ആഗ്രഹിക്കുന്നുണ്ടോ?';
             }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (!examStarted) return;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    if (currentQuestion > 0) {
+                        e.preventDefault();
+                        previousQuestion();
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (currentQuestion < 99) {
+                        e.preventDefault();
+                        nextQuestion();
+                    }
+                    break;
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                    if (!e.ctrlKey && !e.altKey) {
+                        e.preventDefault();
+                        const optionIndex = parseInt(e.key) - 1;
+                        const question = questions[currentQuestion];
+                        selectAnswer(question.id, optionIndex);
+                    }
+                    break;
+            }
+        });
+
+        // Add smooth scrolling for review
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Initialize tooltips and help text
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add keyboard shortcut hints
+            const helpText = document.createElement('div');
+            helpText.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 10px 15px;
+                border-radius: 10px;
+                font-size: 0.8rem;
+                display: none;
+                z-index: 1000;
+            `;
+            helpText.innerHTML = `
+                <strong>കീബോർഡ് ഷോർട്ട്കട്ടുകൾ:</strong><br>
+                ← → : നാവിഗേഷൻ<br>
+                1-4 : ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക
+            `;
+            document.body.appendChild(helpText);
+            
+            // Show help on exam start
+            setTimeout(() => {
+                if (examStarted) {
+                    helpText.style.display = 'block';
+                    setTimeout(() => {
+                        helpText.style.display = 'none';
+                    }, 5000);
+                }
+            }, 2000);
         });
     </script>
 </body>
